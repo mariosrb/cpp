@@ -1,6 +1,8 @@
 #include "ScavTrap.hpp"
 
-ScavTrap::ScavTrap() {}
+ScavTrap::ScavTrap() {
+	std::cout << "strinbf" << std::endl;
+}
 
 ScavTrap::ScavTrap(const std::string &name): ClapTrap(name) {
 	this->hitPoints = 100;

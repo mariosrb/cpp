@@ -50,4 +50,6 @@ void ClapTrap::beRepaired(unsigned int amount) {
 	std::cout << "ClapTrap " << this->name << " is repaired for " << amount << " hit points!" << std::endl;
 }
 
-ClapTrap::ClapTrap() {}
+ClapTrap::ClapTrap() {
+	std::cout << "Test" << std::endl;
+}

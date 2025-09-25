@@ -1,6 +1,8 @@
 #include "FragTrap.hpp"
 
-FragTrap::FragTrap() {}
+FragTrap::FragTrap() {
+	std::cout << ":feef" << std::endl;
+}
 
 FragTrap::FragTrap(const std::string &name): ClapTrap(name) {
 	this->hitPoints = 100;
