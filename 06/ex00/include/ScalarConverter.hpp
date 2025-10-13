@@ -2,6 +2,8 @@
 # define SCALARCONVERTER_HPP
 
 #include <iostream>
+#include <cstdlib>
+#include <iomanip>
 
 enum TYPE {
 	CHAR,
