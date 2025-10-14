@@ -72,8 +72,19 @@ void ScalarConverter::convert(std::string literal) {
 			break;
 		}
 		case PSEUDO_FLOAT:
+		{
+			std::cout << "char: impossible" << std::endl;
+			std::cout << "int: impossible" << std::endl;
+			std::cout << "float: " << literal << std::endl;
+			std::cout << "double: " << literal.substr(0, literal.size() - 1) << std::endl;
+			break;
+		}
 		case PSEUDO_DOUBLE:
 		{
+			std::cout << "char: impossible" << std::endl;
+			std::cout << "int: impossible" << std::endl;
+			std::cout << "float: " << literal << "f" << std::endl;
+			std::cout << "double: " << literal << std::endl;
 			break;
 		}
 		default:
