@@ -30,8 +30,8 @@ int main()
 	std::cout << "Deserialized pointer: " << restored << std::endl;
 
 	if (restored == original)
-		std::cout << "✅ Success: pointers match" << std::endl;
+		std::cout << "Success: pointers match" << std::endl;
 	else
-		std::cout << "❌ Failure: pointers do not match" << std::endl;
+		std::cout << "Failure: pointers do not match" << std::endl;
 	return (0);
 }

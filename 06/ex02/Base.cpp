@@ -4,7 +4,6 @@ Base::~Base() {
 }
 
 Base *generate(void) {
-	srand(time(NULL));
 	int r = rand() % 3;
 
 	if (r == 0)

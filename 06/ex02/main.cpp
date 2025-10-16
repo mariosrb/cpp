@@ -3,6 +3,7 @@
 int main()
 {
 	Base*	obj = generate();
+	srand(time(NULL));
 
 	std::cout << "Identify with pointer: ";
 	identify(obj);
