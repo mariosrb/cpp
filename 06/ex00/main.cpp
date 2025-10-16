@@ -21,15 +21,18 @@ int valid_digit_around_point(std::string input)
 {
 	size_t pos = input.find('.');
 	size_t end = input.size();
+	size_t start = 0;
 	char last = input[input.size() - 1];
 
 	if (last == 'f')
 		end = input.size() - 1;
-	if (pos == 0)
+	if (input[0] == '+' || input[0] == '-')
+		start = 1;
+	if (pos == 0 || pos == start)
 		return (0);
 	if (pos + 1 >= end)
 		return (0);
-	for (size_t i = 0; i < pos; i++) {
+	for (size_t i = start; i < pos; i++) {
 		if (!std::isdigit(input[i]))
 			return (0);
 	}
@@ -45,9 +48,7 @@ TYPE	parse_arg(std::string input)
 	bool	isInt = true;
 	size_t 	size = input.size();
 
-	if (input.length() == 1)
-		return (CHAR);
-	else if (input == "nan" || input == "+inf" || input == "-inf")
+	if (input == "nan" || input == "+inf" || input == "-inf")
 		return (PSEUDO_DOUBLE);
 	else if (input == "nanf" || input == "+inff" || input == "-inff")
 		return (PSEUDO_FLOAT);
@@ -55,16 +56,24 @@ TYPE	parse_arg(std::string input)
 		return (FLOAT);
 	else if (!ends_with_f(input) && has_point(input) && valid_digit_around_point(input))
 		return (DOUBLE);
+
 	if (!input.empty()) {
-		for (size_t i = 0; i < size; i++) {
+		size_t start = 0;
+		if (input[0] == '-' || input[0] == '+')
+			start = 1;
+		for (size_t i = start; i < size; i++) {
 			if (!std::isdigit(input[i])) {
 				isInt = false;
 				break;
 			}
 		}
-		if (isInt)
+		if (isInt && start < size)
 			return (INT);
 	}
+
+	if (input.length() == 1)
+		return (CHAR);
+
 	return (INVALID);
 }
 

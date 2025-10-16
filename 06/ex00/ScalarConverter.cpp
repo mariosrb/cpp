@@ -25,31 +25,50 @@ void ScalarConverter::convert(std::string literal) {
 		}
 		case INT:
 		{
+			long val = std::atol(literal.c_str());
+
+			if (val > INT_MAX || val < INT_MIN) {
+				std::cout << "char: impossible" << std::endl;
+				std::cout << "int: impossible" << std::endl;
+				std::cout << "float: impossible" << std::endl;
+				std::cout << "double: impossible" << std::endl;
+				break;
+    		}
+
 			int i = std::atoi(literal.c_str());
 			char c = static_cast<char>(i);
 			float f = static_cast<float>(i);
 			double d = static_cast<double>(i);
-			if (std::isprint(c))
+
+			if (i >= 0 && i <= 127 && std::isprint(c))
 				std::cout << "char: '" << c << "'" << std::endl;
-			else
+			else if (i >= 0 && i <= 127)
 				std::cout << "char: Non displayable" << std::endl;
+			else
+				std::cout << "char: impossible" << std::endl;
+
 			std::cout << "int: " << i << std::endl;
 			std::cout << std::fixed << std::setprecision(1);
 			std::cout << "float: " << f << "f" << std::endl;
 			std::cout << "double: " << d << std::endl;
 			break;
+
 		}
 		case FLOAT:
 		{
 			float f = std::atof(literal.c_str());
-			char c = static_cast<char>(f);
-			double d = static_cast<double>(f);
-			int i = static_cast<int>(f);
-			if (std::isprint(c))
-				std::cout << "char: '" << c << "'" << std::endl;
-			else
+			if (f >= 0 && f <= 127 && std::isprint(static_cast<char>(f)))
+				std::cout << "char: '" << static_cast<char>(f) << "'" << std::endl;
+			else if (f >= 0 && f <= 127)
 				std::cout << "char: Non displayable" << std::endl;
-			std::cout << "int: " << i << std::endl;
+			else
+				std::cout << "char: impossible" << std::endl;
+			if (f > INT_MAX || f < INT_MIN)
+				std::cout << "int: impossible" << std::endl;
+			else
+				std::cout << "int: " << static_cast<int>(f) << std::endl;
+			double d = static_cast<double>(f);
+
 			std::cout << std::fixed << std::setprecision(1);
 			std::cout << "float: " << f << "f" << std::endl;
 			std::cout << "double: " << d << std::endl;
@@ -58,16 +77,21 @@ void ScalarConverter::convert(std::string literal) {
 		case DOUBLE:
 		{
 			double d = std::atof(literal.c_str());
-			int i = static_cast<int>(d);
-			float f = static_cast<float>(d);
-			char c = static_cast<char>(d);
-			if (std::isprint(c))
-				std::cout << "char: '" << c << "'" << std::endl;
-			else
+
+			if (d >= 0 && d <= 127 && std::isprint(static_cast<char>(d)))
+				std::cout << "char: '" << static_cast<char>(d) << "'" << std::endl;
+			else if (d >= 0 && d <= 127)
 				std::cout << "char: Non displayable" << std::endl;
-			std::cout << "int: " << i << std::endl;
+			else
+				std::cout << "char: impossible" << std::endl;
+				
+			if (d > INT_MAX || d < INT_MIN)
+				std::cout << "int: impossible" << std::endl;
+			else
+				std::cout << "int: " << static_cast<int>(d) << std::endl;
+
 			std::cout << std::fixed << std::setprecision(1);
-			std::cout << "float: " << f << "f" << std::endl;
+			std::cout << "float: " << static_cast<float>(d) << "f" << std::endl;
 			std::cout << "double: " << d << std::endl;
 			break;
 		}
