@@ -24,9 +24,9 @@ int main()
 	Data*	original = &d;
 
 	uintptr_t raw = Serializer::serialize(original);
-	Data* restored = Serializer::deserialize(raw);
+	Data* restored = Serializer::deserialize(raw + 1);
 	std::cout << "Original pointer: " << original << std::endl;
-	std::cout << "Serialized value: " << raw << std::endl;
+	std::cout << "Serialized value: " << raw  << std::endl;
 	std::cout << "Deserialized pointer: " << restored << std::endl;
 
 	if (restored == original)

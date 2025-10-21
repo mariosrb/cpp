@@ -2,7 +2,7 @@
 #include <string>
 
 int main(void) {
-	// Test avec des int (du sujet)
+	// Test avec des int
 	int a = 2;
 	int b = 3;
 
@@ -13,7 +13,7 @@ int main(void) {
 
 	std::cout << std::endl;
 
-	// Test avec des string (du sujet)
+	// Test avec des string
 	std::string c = "chaine1";
 	std::string d = "chaine2";
 
@@ -36,7 +36,7 @@ int main(void) {
 
 	std::cout << std::endl;
 
-	// Test cas d'égalité (doit retourner le second)
+	// Test cas d'égalité
 	int e = 5;
 	int f = 5;
 
