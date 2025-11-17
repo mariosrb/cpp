@@ -3,6 +3,13 @@
 
 #include <iostream>
 #include <stack>
+#include <string.h>
+#include <iostream>
+#include <stdlib.h>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <list>
 
 template <typename T>
 class MutantStack : public std::stack<T> {
