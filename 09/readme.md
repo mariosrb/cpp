@@ -27,3 +27,6 @@ Alice et Bob = clés
 -- Comment ça fonctionne --
 
 La structure est comme un arbre binaire.
+Les clés sont uniques.
+Le conteneur garde les ekements tries automatiquement.
+Lacces ets fait par clé et non par index.
