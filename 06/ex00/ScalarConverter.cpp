@@ -63,7 +63,7 @@ void ScalarConverter::convert(std::string literal) {
 				std::cout << "char: Non displayable" << std::endl;
 			else
 				std::cout << "char: impossible" << std::endl;
-			if (f > INT_MAX || f < INT_MIN)
+			if (f > static_cast<float>(INT_MAX) || f < static_cast<float>(INT_MIN))
 				std::cout << "int: impossible" << std::endl;
 			else
 				std::cout << "int: " << static_cast<int>(f) << std::endl;
@@ -84,7 +84,7 @@ void ScalarConverter::convert(std::string literal) {
 				std::cout << "char: Non displayable" << std::endl;
 			else
 				std::cout << "char: impossible" << std::endl;
-				
+
 			if (d > INT_MAX || d < INT_MIN)
 				std::cout << "int: impossible" << std::endl;
 			else

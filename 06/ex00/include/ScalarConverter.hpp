@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <climits>
+#include <limits.h>
 
 enum TYPE {
 	CHAR,

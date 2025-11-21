@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <cstdlib>
+#include <limits>
 
 class BitcoinExchange {
 	private:

@@ -49,16 +49,74 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 		}
 	}
 
+	// On recupere les dates
 	int year = atoi(date.substr(0, 4).c_str());
 	int month = atoi(date.substr(5, 2).c_str());
 	int day = atoi(date.substr(8, 2).c_str());
 
+	// Verification basique si les imputs sont bon
 	if (year < 1000 || year > 9999)
 		return (false);
 	if (month < 1 || month > 12)
 		return (false);
 	if (day < 1 || day > 31)
 		return (false);
+
+	int	daysInMonths[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	// Verification si cest une annee bisextile
+	if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
+		daysInMonths[1] = 29;
+	if (day > daysInMonths[month - 1])
+		return (false);
+
+	return (true);
+}
+
+bool BitcoinExchange::loadDatabase(const std::string& filename) {
+	std::ifstream file(filename.c_str());
+	if (!file.is_open()) {
+		std::cerr << "Error: could not open database file." << std::endl;
+		return (false);
+	}
+
+	std::string	line;
+	bool firstLine = true;
+
+	while (std::getline(file, line)) {
+		if (firstLine) {
+			firstLine = false;
+			continue;
+		}
+
+		size_t commaPos = line.find(',');
+		if (commaPos == std::string::npos)
+			continue;
+
+		std::string date = trim(line.substr(0, commaPos));
+		std::string valueStr = trim(line.substr(commaPos + 1));
+
+		double value;
+		if (isValidDate(date) && isValidValue(valueStr, value)) {
+			_database[date] = value;
+		}
+	}
+	file.close();
+	return (!_database.empty());
+}
+
+std::string	BitcoinExchange::findClosestDate(const std::string& date) const {
+	std::map<std::string, double>::const_iterator it = _database.lower_bound(date); // Methode de stdmap qui cherche un element >= key
+
+	if (it != _database.end() && it->first == date) // si on a trouve qlq chose et que cest = a date alors on renvoie
+		return (it->first);
+
+	if (it == _database.begin())
+		return (it->first);
+
+	--it;
+	return (it->first);
+
 }
 
 bool BitcoinExchange::initialize(const std::string& dbFile) {
