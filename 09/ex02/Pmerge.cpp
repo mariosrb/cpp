@@ -4,6 +4,9 @@ PmergeMe::PmergeMe() {}
 
 PmergeMe::~PmergeMe() {}
 
+PmergeMe::PmergeMe(const PmergeMe& to_copy) : _vectorData(to_copy._vectorData), _dequeData(to_copy._dequeData) {
+}
+
 PmergeMe& PmergeMe::operator=(const PmergeMe& to_copy) {
 	if (this != &to_copy)
 		{
@@ -50,6 +53,12 @@ void	PmergeMe::parseInput(int argc, char* argv[]) {
 			throw std::overflow_error("Error");
 		}
 
+		// doublon verification
+		int val = static_cast<int>(num);
+		std::vector<int>::iterator it = std::find(_vectorData.begin(), _vectorData.end(), val);
+		if (it != _vectorData.end())
+			throw std::invalid_argument("Error: Duplicate number found.");
+
 		// Ajout aux conteneurs
 		_vectorData.push_back(static_cast<int>(num));
 		_dequeData.push_back(static_cast<int>(num));
@@ -58,6 +67,28 @@ void	PmergeMe::parseInput(int argc, char* argv[]) {
 
 // On affiche soit after soit before en verifiant le nb de int
 void PmergeMe::displaySequence(const std::string& title, const std::vector<int>& data) const {
+	std::cout << title;
+
+	if (data.empty()) {
+		std::cout << std::endl;
+		return;
+	}
+
+	size_t	displayCount = data.size() > 5 ? 5 : data.size();
+	for (size_t i = 0; i < displayCount; i++) {
+		std::cout << data[i];
+		if (i < displayCount - 1)
+			std::cout << " ";
+	}
+
+	if (data.size() > 5)
+		std::cout << " [...]";
+
+	std::cout << std::endl;
+}
+
+// On affiche soit after soit before en verifiant le nb de int
+void PmergeMe::displaySequence(const std::string& title, const std::deque<int>& data) const {
 	std::cout << title;
 
 	if (data.empty()) {
@@ -101,20 +132,42 @@ std::vector<size_t> PmergeMe::_generateJacobsthal(size_t maxSize) {
 }
 
 void	PmergeMe::execute() {
-	displaySequence("Before: ", _vectorData);
-
 	clock_t	startVec = clock();
+	displaySequence("Before: ", _vectorData);
 	_sortVector(_vectorData);
 	clock_t	endVec = clock();
 	double	timeVec = getTimeDif(startVec, endVec);
 
+	clock_t	startDeq = clock();
+	_sortDeque(_dequeData);
+	clock_t	endDeq = clock();
+	double	timeDeq = getTimeDif(startDeq, endDeq);
+
 	displaySequence("After: ", _vectorData);
 	std::cout << "Time to process a range of " << _vectorData.size()
 				<< " elements with std::vector : " << timeVec << " us" << std::endl;
-
+	std::cout << "Time to process a range of " << _dequeData.size()
+				<< " elements with std::deque : " << timeDeq << " us" << std::endl;
 }
 
 std::vector<int>::iterator PmergeMe::_binarySearch(std::vector<int>& sortedList, int val) {
+	int	low = 0;
+	int high = sortedList.size();
+
+	while (low < high) {
+		// calcul du milieu
+		int mid = low + (high - low) / 2;
+		if (sortedList[mid] < val) {
+			low = mid + 1;
+		}
+		else {
+			high = mid;
+		}
+	}
+	return (sortedList.begin() + low);
+}
+
+std::deque<int>::iterator PmergeMe::_binarySearch(std::deque<int>& sortedList, int val) {
 	int	low = 0;
 	int high = sortedList.size();
 
@@ -206,3 +259,76 @@ void PmergeMe::_sortVector(std::vector<int>& arr) {
 }
 
 
+void PmergeMe::_sortDeque(std::deque<int>& arr) {
+	if (arr.size() <= 1)
+		return;
+
+	// Etape 1) creation des pairs et gestion de straggler
+	// On verifie, recupere et enleve le straggler
+	bool hasStraggler = (arr.size() % 2 != 0);
+	int straggler = 0;
+	if (hasStraggler) {
+		straggler = arr.back();
+		arr.pop_back();
+	}
+
+	// Creation des pairs
+	std::deque<std::pair<int, int> > pairs;
+	for (size_t i = 0; i + 1 < arr.size(); i += 2) {
+		int a = arr[i];
+		int b = arr[i + 1];
+
+		if (a > b)
+			pairs.push_back(std::make_pair(a, b));
+		else
+			pairs.push_back(std::make_pair(b, a));
+	}
+
+	// Dans une chaine on met que les max
+	std::deque<int>	mainChain;
+	for (size_t i = 0; i < pairs.size(); i++) {
+		mainChain.push_back(pairs[i].first);
+	}
+	// appel recursif on trie les gagnants
+	_sortDeque(mainChain);
+
+	// Etape 3 : Recontruction
+	std::deque<int>	waiting;
+	// Main chain est trie faut reorganiser les pairs on pousse la nvl derriere et on supp
+	for (size_t i = 0; i < mainChain.size(); i++) {
+		for (size_t j = 0; j < pairs.size(); j++) {
+			if (pairs[j].first == mainChain[i]) {
+				waiting.push_back(pairs[j].second);
+				std::swap(pairs[j], pairs.back());
+				pairs.pop_back();
+				break;
+			}
+		}
+	}
+
+	mainChain.insert(mainChain.begin(), waiting[0]);
+	//on genere la suite
+	std::vector<size_t>	jacobsthal = _generateJacobsthal(waiting.size());
+
+	size_t last_pos = 1;
+	for (size_t k = 3; k < jacobsthal.size(); k++) {
+		size_t boundary = jacobsthal[k];
+		if (boundary > waiting.size())
+			boundary = waiting.size();
+		// insertion en reculant de boundary a derniere traite
+		for (size_t i = boundary; i > last_pos; i--) {
+			int	valToInsert = waiting[i - 1]; // waiting est 0 indexed donc decale de 1
+			// binary search on cherche ou inserer la vaToInsert dans mainChain
+			std::deque<int>::iterator pos = _binarySearch(mainChain, valToInsert);
+			mainChain.insert(pos, valToInsert);
+		}
+		last_pos = boundary;
+		if (last_pos == waiting.size())
+			break;
+	}
+	if (hasStraggler) {
+		std::deque<int>::iterator pos = _binarySearch(mainChain, straggler);
+		mainChain.insert(pos, straggler);
+	}
+	arr = mainChain;
+}

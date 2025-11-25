@@ -11,16 +11,6 @@
 #include <algorithm>
 
 class PmergeMe {
-	private:
-		std::vector<int>	_vectorData;
-		std::deque<int>		_dequeData;
-
-		// --- Logique pour vector ---
-		// Algo recursif principal
-		void						_sortVector(std::vector<int>& arr);
-		std::vector<size_t> 		_generateJacobsthal(size_t maxSize);
-		std::vector<int>::iterator _binarySearch(std::vector<int>& sortedSeq, int val);
-
 	public:
 		PmergeMe();
 		~PmergeMe();
@@ -33,12 +23,28 @@ class PmergeMe {
 
 		// utils
 		void	displaySequence(const std::string& title, const std::vector<int>& data) const;
+		void	displaySequence(const std::string& title, const std::deque<int>& data) const;
 		double	getTimeDif(clock_t start, clock_t end) const;
 
 		// getters
 		const std::vector<int>& getVectorData() const;
 		const std::deque<int>&  getDequeData() const;
 
+	private:
+		std::vector<int>	_vectorData;
+		std::deque<int>		_dequeData;
+
+		// pour vector
+		// Algo recursif principal
+		void						_sortVector(std::vector<int>& arr);
+		std::vector<int>::iterator	_binarySearch(std::vector<int>& sortedSeq, int val);
+
+		//pour deque
+		void						_sortDeque(std::deque<int>& arr);
+		std::deque<int>::iterator	_binarySearch(std::deque<int>& sortedSeq, int val);
+
+		// utils
+		std::vector<size_t> 		_generateJacobsthal(size_t maxSize);
 };
 
 #endif

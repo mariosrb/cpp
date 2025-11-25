@@ -116,9 +116,11 @@ std::string	BitcoinExchange::findClosestDate(const std::string& date) const {
 	if (it != _database.end() && it->first == date) // si on a trouve qlq chose et que cest = a date alors on renvoie
 		return (it->first);
 
-	if (it == _database.begin())
-		return (it->first);
-
+	if (it == _database.begin()) {
+		if (it->first == date)
+			return (it->first);
+		return ("");
+	}
 	--it;
 	return (it->first);
 }
