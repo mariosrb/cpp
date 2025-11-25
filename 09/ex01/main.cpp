@@ -1,18 +1,17 @@
-#include "./include/BitcoinExchange.hpp"
+#include "./include/RPN.hpp"
 
 int	main(int argc, char *argv[])
 {
 	if (argc != 2)
 	{
-		std::cerr << "Error: could not open file." << std::endl;
-		return (1);
-	}
-	BitcoinExchange exchange;
-
-	if (!exchange.initialize("data.csv")) {
+		std::cerr << "Error" << std::endl;
 		return (1);
 	}
 
-	exchange.processInput(argv[1]);
-	return (0);
+	RPN calculator;
+	if (calculator.evaluate(argv[1])){
+		std::cout << calculator.getResult() << std::endl;
+		return (0);
+	}
+	return (1);
 }
